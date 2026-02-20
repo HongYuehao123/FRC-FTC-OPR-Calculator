@@ -137,7 +137,7 @@ def autoScoreForGames(matches):
             games.append([blue_teams, red_teams, [blue_score, red_score]])
     return games
 
-def getOPR(match, weighted): 
+def getOPR(match, weighted, auth_key): 
     matches = get_event_scores(match, auth_key)
     
     # Filter out unplayed matches (score -1 or null) here if preferred,
@@ -162,19 +162,19 @@ def getOPR(match, weighted):
     
     return totalOPR, teleopOPR, autoOPR
 
-# CHANGE THESE VALUES
-match = "2526-CHN-HAQ" # Example FTC Event Key
-auth_key = '6zQQ3WoyL9tpHMBPLChZ7jgqAM/UeH1MDVRCvTWgRmQ=' # Replace with actual TOA Key
+def FTCOPR():
+    match = input("Enter your desired event Key: ")
+    auth_key = input("Enter your API key: ")
 
-try:
-    totalOPR, teleopOPR, autoOPR = getOPR(match, True)
+    try:
+        totalOPR, teleopOPR, autoOPR = getOPR(match, True, auth_key)
 
-    for team, score in sorted(totalOPR.items(), key=lambda x: -x[1]):
-        totalScore = totalOPR.get(team, 0)
-        teleopScore = teleopOPR.get(team, 0)
-        autoScore = autoOPR.get(team, 0)
-        print(f"Team {team}: totalOPR = {totalScore:.2f}, teleopOPR = {teleopScore:.2f}, autoOPR = {autoScore:.2f}")
+        for team, score in sorted(totalOPR.items(), key=lambda x: -x[1]):
+            totalScore = totalOPR.get(team, 0)
+            teleopScore = teleopOPR.get(team, 0)
+            autoScore = autoOPR.get(team, 0)
+            print(f"Team {team}: totalOPR = {totalScore:.2f}, teleopOPR = {teleopScore:.2f}, autoOPR = {autoScore:.2f}")
 
-except Exception as e:
-    print(f"Error: {e}")
-    print("Please ensure you have entered a valid TOA API Key and Event Key.")
+    except Exception as e:
+        print(f"Error: {e}")
+        print("Please ensure you have entered a valid TOA API Key and Event Key.")

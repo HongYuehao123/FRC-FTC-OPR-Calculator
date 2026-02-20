@@ -104,8 +104,8 @@ def teleopScoreForGames(matches):
 
         blue = [t[3:] for t in m["alliances"]["blue"]["team_keys"]]  # remove 'frc'
         red = [t[3:] for t in m["alliances"]["red"]["team_keys"]]
-        blue_score = m["score_breakdown"]["blue"]["teleopCoralPoints"]
-        red_score = m["score_breakdown"]["red"]["teleopCoralPoints"]
+        blue_score = m["score_breakdown"]["blue"]["teleopPoints"]
+        red_score = m["score_breakdown"]["red"]["teleopPoints"]
         if blue_score != -1 and red_score != -1:  # ignore unplayed matches
             games.append([blue, red, [blue_score, red_score]])
     return games
@@ -124,7 +124,7 @@ def autoScoreForGames(matches):
             games.append([blue, red, [blue_score, red_score]])
     return games
 
-def getOPR(match, weighted): 
+def getOPR(match, weighted, auth_key): 
     matches = get_event_scores(match, auth_key)
     totalScores = totalScoreForGames(matches)
     teleopScores = teleopScoreForGames(matches)
@@ -145,18 +145,19 @@ def getOPR(match, weighted):
     
     return totalOPR, teleopOPR, autoOPR
 
-match = "2025paca"
-auth_key = 'utzEfVnhAbe9j7VlhxMggWg1XNvII1LZ6wBZm3mKwsBiBCfBimG8htWdQTAqIVU3'
+def FRCOPR():
+    match = input("Enter your desired event Key: ")
+    auth_key = input("Enter your API key: ")
 
-try:
-    totalOPR, teleopOPR, autoOPR = getOPR(match, True)
+    try:
+        totalOPR, teleopOPR, autoOPR = getOPR(match, True, auth_key)
 
-    for team, score in sorted(totalOPR.items(), key=lambda x: -x[1]):
-        totalScore = totalOPR.get(team, 0)
-        teleopScore = teleopOPR.get(team, 0)
-        autoScore = autoOPR.get(team, 0)
-        print(f"Team {team}: totalOPR = {totalScore:.2f}, teleopOPR = {teleopScore:.2f}, autoOPR = {autoScore:.2f}")
+        for team, score in sorted(totalOPR.items(), key=lambda x: -x[1]):
+            totalScore = totalOPR.get(team, 0)
+            teleopScore = teleopOPR.get(team, 0)
+            autoScore = autoOPR.get(team, 0)
+            print(f"Team {team}: totalOPR = {totalScore:.2f}, teleopOPR = {teleopScore:.2f}, autoOPR = {autoScore:.2f}")
 
-except Exception as e:
-    print(f"Error: {e}")
-    print("Please ensure you have entered a valid TBA API Key and Event Key.")
+    except Exception as e:
+        print(f"Error: {e}")
+        print("Please ensure you have entered a valid TBA API Key and Event Key.")
