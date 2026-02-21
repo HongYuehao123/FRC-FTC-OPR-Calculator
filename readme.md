@@ -7,7 +7,7 @@ This is a python project that works uses numpy to provide a list of robot's OPR 
 ## How to use?
 
 - Gain API Key and Event Key from the website. [How to Get API Key](#how-to-get-api-key)
-- Run main.py
+- Run main.py for no-gui and main.py for gui version
 - Specify which game you are checking. 
 - Input the Event Key and API Key. 
 
