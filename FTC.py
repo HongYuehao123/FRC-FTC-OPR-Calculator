@@ -162,9 +162,9 @@ def getOPR(match, weighted, auth_key):
     
     return totalOPR, teleopOPR, autoOPR
 
-def FTCOPR(match, auth_key):
+def FTCOPR(match, auth_key, weighted):
     try:
-        totalOPR, teleopOPR, autoOPR = getOPR(match, True, auth_key)
+        totalOPR, teleopOPR, autoOPR = getOPR(match, weighted, auth_key)
         result = ""
 
         for team, score in sorted(totalOPR.items(), key=lambda x: -x[1]):

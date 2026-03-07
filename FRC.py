@@ -85,7 +85,7 @@ def get_event_scores(event_key, auth_key):
 def totalScoreForGames(matches):
     games = []
     for m in matches:
-        if m["comp_level"] != "qm":
+        if m["comp_level"] != "qm" or m.get("score_breakdown") is None:
             continue
         
         blue = [t[3:] for t in m["alliances"]["blue"]["team_keys"]]  # remove 'frc'
@@ -99,13 +99,13 @@ def totalScoreForGames(matches):
 def teleopScoreForGames(matches):
     games = []
     for m in matches:
-        if m["comp_level"] != "qm":
+        if m["comp_level"] != "qm" or m.get("score_breakdown") is None:
             continue
 
         blue = [t[3:] for t in m["alliances"]["blue"]["team_keys"]]  # remove 'frc'
         red = [t[3:] for t in m["alliances"]["red"]["team_keys"]]
-        blue_score = m["score_breakdown"]["blue"]["teleopPoints"]
-        red_score = m["score_breakdown"]["red"]["teleopPoints"]
+        blue_score = m["score_breakdown"]["blue"]["totalTeleopPoints"]
+        red_score = m["score_breakdown"]["red"]["totalTeleopPoints"]
         if blue_score != -1 and red_score != -1:  # ignore unplayed matches
             games.append([blue, red, [blue_score, red_score]])
     return games
@@ -113,13 +113,13 @@ def teleopScoreForGames(matches):
 def autoScoreForGames(matches):
     games = []
     for m in matches:
-        if m["comp_level"] != "qm":
+        if m["comp_level"] != "qm" or m.get("score_breakdown") is None:
             continue
         
         blue = [t[3:] for t in m["alliances"]["blue"]["team_keys"]]  # remove 'frc'
         red = [t[3:] for t in m["alliances"]["red"]["team_keys"]]
-        blue_score = m["score_breakdown"]["blue"]["autoPoints"]
-        red_score = m["score_breakdown"]["red"]["autoPoints"]
+        blue_score = m["score_breakdown"]["blue"]["totalAutoPoints"]
+        red_score = m["score_breakdown"]["red"]["totalAutoPoints"]
         if blue_score != -1 and red_score != -1:  # ignore unplayed matches
             games.append([blue, red, [blue_score, red_score]])
     return games
@@ -145,9 +145,9 @@ def getOPR(match, weighted, auth_key):
     
     return totalOPR, teleopOPR, autoOPR
 
-def FRCOPR(match, auth_key):
+def FRCOPR(match, auth_key, weighted):
     try:
-        totalOPR, teleopOPR, autoOPR = getOPR(match, True, auth_key)
+        totalOPR, teleopOPR, autoOPR = getOPR(match, weighted, auth_key)
         result = ""
 
         for team, score in sorted(totalOPR.items(), key=lambda x: -x[1]):
@@ -156,8 +156,8 @@ def FRCOPR(match, auth_key):
             autoScore = autoOPR.get(team, 0)
             result += f"Team {team}: totalOPR = {totalScore:.2f}, teleopOPR = {teleopScore:.2f}, autoOPR = {autoScore:.2f} \n"
             
-        return result
+        return result, totalOPR
 
     except Exception as e:
         print(f"Error: {e}")
-        print("Please ensure you have entered a valid TBA API Key and Event Key.")
+        return ("Please ensure you have entered a valid TBA API Key and Event Key.")

@@ -6,6 +6,11 @@ This is a python project that works uses numpy to provide a list of robot's OPR 
 
 ## How to use?
 
+- Clone the repo and run the following codes in terminal. 
+```
+cd ~/FRC-FTC-OPR-Calculator
+pip install -r requirements.txt
+```
 - Gain API Key and Event Key from the website. [How to Get API Key](#how-to-get-api-key)
 - Run main.py for no-gui and main.py for gui version
 - Specify which game you are checking. 
